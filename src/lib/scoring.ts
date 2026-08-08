@@ -1,4 +1,4 @@
-import { ASSESSMENT_QUESTIONS } from '@/data/assessment';
+import { getAllAssessmentQuestions } from '@/data/assessments';
 import { EXPLORATION_AREAS } from '@/data/careers';
 import { DimensionScores, ExplorationArea, MatchStrength } from '@/types';
 
@@ -22,7 +22,9 @@ export function calculateDimensionScores(
     leadership: 0,
   };
 
-  for (const question of ASSESSMENT_QUESTIONS) {
+  const allQuestions = getAllAssessmentQuestions();
+
+  for (const question of allQuestions) {
     const userAnswer = answers[question.id];
     if (!userAnswer) continue;
 

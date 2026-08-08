@@ -1,38 +1,53 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
-import { ASSESSMENT_QUESTIONS } from '@/data/assessment';
-import { getStoredJourney, saveAnswer } from '@/lib/storage';
+import { ArrowLeft, Sparkles } from 'lucide-react';
+import { getQuestionsForStage, getStageMeta } from '@/data/assessments';
+import { getStoredJourney, getStoredProfile, saveAnswer } from '@/lib/storage';
 import { trackEvent } from '@/lib/analytics';
 import ProgressBar from '@/components/ProgressBar';
+import { EducationStage } from '@/types';
 
 export default function AssessmentPage() {
   const router = useRouter();
+  const [stage, setStage] = useState<EducationStage>('college');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string | string[]>>({});
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
-    trackEvent('assessment_started');
+    const profile = getStoredProfile();
+    const currentStage = profile.educationStage || 'college';
+    setStage(currentStage);
+
+    trackEvent('assessment_started', { stage: currentStage });
+
     const journey = getStoredJourney();
     if (journey.assessmentAnswers) {
       setAnswers(journey.assessmentAnswers);
-      // Optional: resume where left off if partial
-      const answeredCount = Object.keys(journey.assessmentAnswers).length;
-      if (answeredCount > 0 && answeredCount < ASSESSMENT_QUESTIONS.length) {
-        setCurrentIndex(answeredCount);
-      }
     }
   }, []);
 
-  const totalQuestions = ASSESSMENT_QUESTIONS.length;
-  const currentQuestion = ASSESSMENT_QUESTIONS[currentIndex] || ASSESSMENT_QUESTIONS[0];
-  const selectedAnswer = answers[currentQuestion.id];
+  const stageMeta = getStageMeta(stage);
+
+  // Active question set for this stage, with lightweight condition filtering if needed
+  const activeQuestions = useMemo(() => {
+    const rawQuestions = getQuestionsForStage(stage);
+    return rawQuestions.filter((q) => {
+      if (!q.condition) return true;
+      const priorAnswer = answers[q.condition.questionId];
+      return priorAnswer === q.condition.answerId;
+    });
+  }, [stage, answers]);
+
+  const totalQuestions = activeQuestions.length;
+  const currentQuestion =
+    activeQuestions[currentIndex] || activeQuestions[0] || getQuestionsForStage('college')[0];
+  const selectedAnswer = answers[currentQuestion?.id];
 
   const handleSelectOption = (optionId: string) => {
-    if (isTransitioning) return;
+    if (isTransitioning || !currentQuestion) return;
 
     // Save answer
     saveAnswer(currentQuestion.id, optionId);
@@ -47,6 +62,7 @@ export default function AssessmentPage() {
         setIsTransitioning(false);
       } else {
         // Complete! Route to completion screen
+        trackEvent('assessment_completed', { stage, answersCount: totalQuestions });
         router.push('/assessment/complete');
       }
     }, 220);
@@ -60,6 +76,14 @@ export default function AssessmentPage() {
     }
   };
 
+  if (!currentQuestion) {
+    return (
+      <div className="w-full max-w-lg px-4 py-20 text-center">
+        <p className="text-sm text-brand-muted">Loading discovery questions...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full max-w-lg px-4 sm:px-6 py-8 sm:py-12 flex flex-col items-center">
       {/* Header controls: Back + Question Counter */}
@@ -70,11 +94,12 @@ export default function AssessmentPage() {
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-muted hover:text-brand-dark transition-colors py-1 px-2 -ml-2 rounded-lg hover:bg-brand-border/40"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>{currentIndex === 0 ? 'Onboarding' : 'Previous'}</span>
+          <span>{currentIndex === 0 ? 'Back' : 'Previous'}</span>
         </button>
 
-        <span className="text-xs font-bold uppercase tracking-wider text-brand-primary">
-          Discovery
+        <span className="inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-brand-primary bg-brand-primary-light px-2.5 py-0.5 rounded-full">
+          <Sparkles className="w-3 h-3" />
+          <span>{stageMeta.badge}</span>
         </span>
       </div>
 
@@ -87,13 +112,13 @@ export default function AssessmentPage() {
         />
       </div>
 
-      {/* Section Subheading & Main Question */}
+      {/* Stage Subtitle & Main Question */}
       <div className="text-center w-full mb-8 transition-opacity duration-150">
-        <span className="text-xs uppercase font-bold tracking-widest text-brand-subtle">
-          LET’S GET TO KNOW YOU
+        <span className="text-xs uppercase font-bold tracking-widest text-brand-subtle block mb-1">
+          {stageMeta.heading}
         </span>
 
-        <h1 className="font-heading font-extrabold text-2xl sm:text-3xl text-brand-dark mt-3 tracking-tight leading-snug">
+        <h1 className="font-heading font-extrabold text-2xl sm:text-3xl text-brand-dark mt-2 tracking-tight leading-snug">
           {currentQuestion.title}
         </h1>
 
@@ -118,41 +143,37 @@ export default function AssessmentPage() {
               key={option.id}
               type="button"
               onClick={() => handleSelectOption(option.id)}
-              className={`w-full text-left p-5 rounded-2xl border transition-smooth interactive-card cursor-pointer flex items-center justify-between gap-4 ${
+              className={`w-full p-4 sm:p-5 rounded-2xl text-left border transition-all duration-200 cursor-pointer ${
                 isSelected
-                  ? 'border-brand-primary ring-2 ring-brand-primary/20 bg-brand-primary-light/40'
-                  : 'border-brand-border bg-white hover:border-brand-border-hover'
+                  ? 'bg-brand-primary-light/40 border-brand-primary ring-2 ring-brand-primary/20 shadow-xs'
+                  : 'bg-white border-brand-border hover:border-brand-primary/50 hover:bg-brand-bg/50 shadow-subtle'
               }`}
             >
-              <div className="flex items-center gap-3.5">
+              <div className="flex items-start gap-3.5">
                 {option.emoji && (
-                  <span className="text-2xl select-none shrink-0">{option.emoji}</span>
+                  <span className="text-xl sm:text-2xl mt-0.5 shrink-0 select-none">
+                    {option.emoji}
+                  </span>
                 )}
-                <span className="font-heading font-semibold text-base sm:text-lg text-brand-dark">
-                  {option.label}
-                </span>
-              </div>
-
-              <div
-                className={`w-6 h-6 rounded-full border flex items-center justify-center shrink-0 transition-colors ${
-                  isSelected
-                    ? 'border-brand-primary bg-brand-primary text-white'
-                    : 'border-brand-border bg-brand-bg text-transparent'
-                }`}
-              >
-                <div
-                  className={`w-2 h-2 rounded-full ${
-                    isSelected ? 'bg-white' : 'bg-transparent'
-                  }`}
-                />
+                <div className="flex-1">
+                  <h3 className="font-heading font-bold text-sm sm:text-base text-brand-dark leading-snug">
+                    {option.label}
+                  </h3>
+                  {option.description && (
+                    <p className="text-xs text-brand-muted mt-1 leading-relaxed">
+                      {option.description}
+                    </p>
+                  )}
+                </div>
               </div>
             </button>
           );
         })}
       </div>
 
-      <p className="mt-8 text-xs text-brand-subtle text-center">
-        Clicking an answer automatically continues to the next question.
+      {/* Helpful context footnote */}
+      <p className="text-xs text-brand-subtle text-center mt-8">
+        Single-tap to select. There are no right or wrong answers.
       </p>
     </div>
   );

@@ -22,10 +22,22 @@ export interface AssessmentOption {
 
 export interface AssessmentQuestion {
   id: number;
+  stage?: EducationStage;
   title: string;
   subtitle?: string;
   type: 'single' | 'multiple';
   options: AssessmentOption[];
+  condition?: {
+    questionId: number;
+    answerId: string;
+  };
+}
+
+export interface AssessmentStageMeta {
+  stage: EducationStage;
+  heading: string;
+  subheading: string;
+  badge: string;
 }
 
 export interface DimensionScores {

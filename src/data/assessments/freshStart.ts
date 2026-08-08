@@ -1,0 +1,235 @@
+import { AssessmentQuestion } from '@/types';
+
+export const FRESH_START_QUESTIONS: AssessmentQuestion[] = [
+  {
+    id: 301,
+    stage: 'fresh_start',
+    title: 'What do you most want to leave behind as you start fresh?',
+    subtitle: 'Acknowledging what didn’t work is the first step toward clarity.',
+    type: 'single',
+    options: [
+      {
+        id: 'draining_routine',
+        label: 'A monotonous, repetitive routine that stopped challenging my mind',
+        emoji: '🔁',
+        weights: { creativity: 2.0, technology: 1.5 },
+      },
+      {
+        id: 'wrong_field',
+        label: 'A field I chose due to external expectations, not genuine interest',
+        emoji: '🚪',
+        weights: { creativity: 2.0, people: 1.5 },
+      },
+      {
+        id: 'burnout_pressure',
+        label: 'Burnout, lack of boundaries, or an unhealthy work culture',
+        emoji: '🛑',
+        weights: { people: 2.0, practical: 1.5 },
+      },
+      {
+        id: 'limited_upside',
+        label: 'Capped growth, outdated skills, and low compensation velocity',
+        emoji: '📉',
+        weights: { business: 2.5, technology: 1.5 },
+      },
+    ],
+  },
+  {
+    id: 302,
+    stage: 'fresh_start',
+    title: 'What would you love to have significantly more of in your next chapter?',
+    subtitle: 'Where you want your energy to go.',
+    type: 'single',
+    options: [
+      {
+        id: 'more_tech_building',
+        label: 'Building technology, coding, and mastering modern digital tools',
+        emoji: '💻',
+        weights: { technology: 2.5, practical: 1.5 },
+      },
+      {
+        id: 'more_creativity',
+        label: 'Creative freedom, visual design, storytelling, and autonomy',
+        emoji: '🎨',
+        weights: { creativity: 2.5, people: 1.0 },
+      },
+      {
+        id: 'more_analytical_growth',
+        label: 'Data analysis, financial strategy, and structured business problem solving',
+        emoji: '📊',
+        weights: { analytical: 2.5, business: 1.5 },
+      },
+      {
+        id: 'more_human_impact',
+        label: 'Meaningful human connection, coaching, healthcare, or social impact',
+        emoji: '🌱',
+        weights: { people: 2.5, scientific: 1.5 },
+      },
+    ],
+  },
+  {
+    id: 303,
+    stage: 'fresh_start',
+    title: 'Which natural talent felt most underutilized in your past work?',
+    subtitle: 'The strength you are eager to bring to life.',
+    type: 'single',
+    options: [
+      {
+        id: 'technical_curiosity',
+        label: 'Technical problem-solving and figuring out how systems work',
+        emoji: '⚡',
+        weights: { technology: 2.0, practical: 2.0 },
+      },
+      {
+        id: 'visual_aesthetic',
+        label: 'Visual aesthetics, crafting clean designs, and intuitive communication',
+        emoji: '✨',
+        weights: { creativity: 2.5 },
+      },
+      {
+        id: 'pattern_detection',
+        label: 'Analytical rigor, spotting trends in numbers, and critical logic',
+        emoji: '🔍',
+        weights: { analytical: 2.5, scientific: 1.0 },
+      },
+      {
+        id: 'empathy_leadership',
+        label: 'Empathy, understanding people’s needs, and facilitating teamwork',
+        emoji: '🤝',
+        weights: { people: 2.5, leadership: 2.0 },
+      },
+    ],
+  },
+  {
+    id: 304,
+    stage: 'fresh_start',
+    title: 'If you could explore any modern domain with zero judgment, what calls to you?',
+    subtitle: 'Follow your genuine curiosity without worrying about past credentials.',
+    type: 'single',
+    options: [
+      {
+        id: 'explore_ai_code',
+        label: 'Software Engineering, AI Systems & Web Development',
+        emoji: '🤖',
+        weights: { technology: 2.5, practical: 1.5 },
+      },
+      {
+        id: 'explore_design_ux',
+        label: 'Product Design (UI/UX), Brand Storytelling & Creative Media',
+        emoji: '🎨',
+        weights: { creativity: 2.5, people: 1.0 },
+      },
+      {
+        id: 'explore_data_biz',
+        label: 'Data Analytics, Product Management & Business Growth',
+        emoji: '📈',
+        weights: { analytical: 2.0, business: 2.5 },
+      },
+      {
+        id: 'explore_people_impact',
+        label: 'Psychology, Education, Sustainability & Health Technology',
+        emoji: '🌍',
+        weights: { people: 2.5, scientific: 1.5 },
+      },
+    ],
+  },
+  {
+    id: 305,
+    stage: 'fresh_start',
+    title: 'What daily work rhythm would feel most restorative and productive for you?',
+    subtitle: 'Designing a work life that fits your temperament.',
+    type: 'single',
+    options: [
+      {
+        id: 'deep_solo_focus',
+        label: 'Deep solo focus: Building concrete deliverables with clear tangible outputs',
+        emoji: '🎧',
+        weights: { technology: 1.5, practical: 2.0 },
+      },
+      {
+        id: 'creative_iteration',
+        label: 'Creative play: Experimenting with ideas, sketches, and prototypes',
+        emoji: '💡',
+        weights: { creativity: 2.5 },
+      },
+      {
+        id: 'structured_logic',
+        label: 'Structured logic: Investigating data models, research, and clear frameworks',
+        emoji: '📐',
+        weights: { analytical: 2.5, scientific: 1.0 },
+      },
+      {
+        id: 'people_centric',
+        label: 'People-first: Interacting, mentoring, helping users, and collaborating',
+        emoji: '🤗',
+        weights: { people: 2.5, leadership: 1.5 },
+      },
+    ],
+  },
+  {
+    id: 306,
+    stage: 'fresh_start',
+    title: 'How do you want to build momentum during this restart?',
+    subtitle: 'One calm step at a time.',
+    type: 'single',
+    options: [
+      {
+        id: 'try_micro_simulations',
+        label: 'Try 5-minute interactive experiences to see what real roles feel like',
+        emoji: '✨',
+        weights: { practical: 2.0, creativity: 1.5 },
+      },
+      {
+        id: 'structured_roadmap',
+        label: 'Follow a step-by-step progression roadmap with clear milestones',
+        emoji: '🗺️',
+        weights: { analytical: 1.5, technology: 1.5 },
+      },
+      {
+        id: 'portfolio_first',
+        label: 'Build 2–3 real-world portfolio projects to prove my new capability',
+        emoji: '🛠️',
+        weights: { practical: 2.5, business: 1.5 },
+      },
+      {
+        id: 'explore_broadly',
+        label: 'Explore 4–5 different directions before committing to one path',
+        emoji: '🧭',
+        weights: { creativity: 2.0, people: 1.5 },
+      },
+    ],
+  },
+  {
+    id: 307,
+    stage: 'fresh_start',
+    title: 'What does genuine success look like at the end of this transition?',
+    subtitle: 'Your ultimate peace of mind.',
+    type: 'single',
+    options: [
+      {
+        id: 'work_you_love',
+        label: 'Waking up energized to solve problems that actually interest me',
+        emoji: '🌟',
+        weights: { creativity: 2.0, technology: 1.5 },
+      },
+      {
+        id: 'valuable_craft',
+        label: 'Possessing high-demand modern skills that give me career security',
+        emoji: '💼',
+        weights: { technology: 2.0, business: 2.0 },
+      },
+      {
+        id: 'financial_freedom',
+        label: 'Accelerating my income and building financial independence',
+        emoji: '💰',
+        weights: { business: 2.5, leadership: 1.5 },
+      },
+      {
+        id: 'peace_and_purpose',
+        label: 'Work-life harmony, healthy boundaries, and doing work that helps others',
+        emoji: '❤️',
+        weights: { people: 2.5, scientific: 1.5 },
+      },
+    ],
+  },
+];
