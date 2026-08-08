@@ -100,6 +100,23 @@ export interface CareerMilestone {
   };
 }
 
+export interface IncomePath {
+  type: 'job' | 'freelance' | 'startup' | 'contract' | 'remote' | 'products';
+  title: string;
+  emoji: string;
+  description: string;
+  whereMoneyComesFrom: string;
+}
+
+export interface LearningProgression {
+  learn: string;
+  practice: string;
+  build: string;
+  portfolio: string;
+  experience: string;
+  opportunity: string;
+}
+
 export interface Career {
   id: string;
   directionId: string;
@@ -115,6 +132,8 @@ export interface Career {
     stage: string;
     description: string;
   }[];
+  incomePaths?: IncomePath[];
+  learningProgression?: LearningProgression;
   relatedCareerIds: string[];
   nextSteps: CareerMilestone[];
 }
@@ -125,6 +144,10 @@ export interface UserJourneyState {
   assessmentAnswers: Record<number, string | string[]>;
   scores?: DimensionScores;
   matchedAreaIds?: string[];
+  exploredAreaIds?: string[];
+  triedCareerIds?: string[];
+  likedCareerIds?: string[];
+  dislikedCareerIds?: string[];
   activeCareerId?: string;
   completedStepIds: string[];
   savedCareerIds: string[];

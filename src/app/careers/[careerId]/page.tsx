@@ -3,7 +3,18 @@
 import React, { use, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, ArrowRight, CheckCircle2, Bookmark, Check } from 'lucide-react';
+import {
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle2,
+  Bookmark,
+  Check,
+  Sparkles,
+  DollarSign,
+  GraduationCap,
+  PlayCircle,
+  HelpCircle,
+} from 'lucide-react';
 import { CAREERS, EXPLORATION_AREAS, CAREER_DIRECTIONS } from '@/data/careers';
 import { trackEvent } from '@/lib/analytics';
 import { getStoredJourney, toggleSaveCareer } from '@/lib/storage';
@@ -44,6 +55,17 @@ export default function CareerDetailsPage({ params }: CareerDetailsPageProps) {
     }
   };
 
+  const progressionSteps = career.learningProgression
+    ? [
+        { title: '1. Learn', desc: career.learningProgression.learn },
+        { title: '2. Practice', desc: career.learningProgression.practice },
+        { title: '3. Build', desc: career.learningProgression.build },
+        { title: '4. Portfolio', desc: career.learningProgression.portfolio },
+        { title: '5. Experience', desc: career.learningProgression.experience },
+        { title: '6. Opportunity', desc: career.learningProgression.opportunity },
+      ]
+    : career.waysToGetThere.map((w, idx) => ({ title: `${idx + 1}. ${w.stage}`, desc: w.description }));
+
   return (
     <div className="w-full max-w-xl px-4 sm:px-6 py-8 sm:py-14 flex flex-col items-center">
       {/* Back button + Save button */}
@@ -53,7 +75,7 @@ export default function CareerDetailsPage({ params }: CareerDetailsPageProps) {
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-muted hover:text-brand-dark transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Back to {direction?.title || 'Careers'}</span>
+          <span>Back to {direction?.title || 'Explore'}</span>
         </Link>
 
         <button
@@ -66,7 +88,7 @@ export default function CareerDetailsPage({ params }: CareerDetailsPageProps) {
           }`}
         >
           {isSaved ? <Check className="w-3.5 h-3.5" /> : <Bookmark className="w-3.5 h-3.5" />}
-          <span>{isSaved ? 'Saved' : 'Save Career'}</span>
+          <span>{isSaved ? 'Saved to Journey' : 'Save Path'}</span>
         </button>
       </div>
 
@@ -78,7 +100,7 @@ export default function CareerDetailsPage({ params }: CareerDetailsPageProps) {
           </div>
           <div>
             <span className="text-xs uppercase font-bold tracking-widest text-brand-primary">
-              {direction?.title || 'Career Path'}
+              {direction?.title || area?.title || 'Career Path'}
             </span>
             <h1 className="font-heading font-extrabold text-2xl sm:text-3xl text-brand-dark tracking-tight">
               {career.title}
@@ -91,11 +113,16 @@ export default function CareerDetailsPage({ params }: CareerDetailsPageProps) {
         </p>
       </div>
 
-      {/* 1. What do they do? */}
+      {/* ─────────────────────────────────────────────────────────────
+          QUESTION 1: WHAT IS THIS? (What does a person actually do?)
+          ───────────────────────────────────────────────────────────── */}
       <div className="w-full bg-white p-6 sm:p-7 rounded-2xl border border-brand-border shadow-xs mb-5">
-        <h2 className="text-xs uppercase font-bold tracking-widest text-brand-dark mb-4">
-          WHAT DO THEY DO?
-        </h2>
+        <div className="flex items-center gap-2 mb-4">
+          <HelpCircle className="w-4 h-4 text-brand-primary" />
+          <h2 className="text-xs uppercase font-bold tracking-widest text-brand-dark">
+            1. WHAT IS THIS? (WHAT YOU ACTUALLY DO)
+          </h2>
+        </div>
         <ul className="space-y-3">
           {career.whatTheyDo.map((item, idx) => (
             <li key={idx} className="flex items-start gap-3 text-sm text-brand-muted leading-relaxed">
@@ -106,55 +133,67 @@ export default function CareerDetailsPage({ params }: CareerDetailsPageProps) {
         </ul>
       </div>
 
-      {/* 2. You may enjoy this if... */}
-      <div className="w-full bg-white p-6 sm:p-7 rounded-2xl border border-brand-border shadow-xs mb-5">
-        <h2 className="text-xs uppercase font-bold tracking-widest text-brand-dark mb-4">
-          YOU MAY ENJOY THIS IF...
-        </h2>
-        <ul className="space-y-3">
-          {career.youMayEnjoyIf.map((item, idx) => (
-            <li key={idx} className="flex items-start gap-3 text-sm text-brand-muted leading-relaxed">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0 stroke-[2.5]" />
-              <span className="text-brand-dark font-medium">{item}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {/* ─────────────────────────────────────────────────────────────
+          QUESTION 2: WOULD I ENJOY IT? (Experience over personality score)
+          ───────────────────────────────────────────────────────────── */}
+      <div className="w-full bg-gradient-to-br from-brand-primary-light/40 via-white to-white p-6 sm:p-7 rounded-2xl border-2 border-brand-primary/40 shadow-xs mb-5">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-brand-primary" />
+            <h2 className="text-xs uppercase font-bold tracking-widest text-brand-primary">
+              2. WOULD I ENJOY IT?
+            </h2>
+          </div>
+          <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-white border border-brand-border text-brand-muted">
+            5-min challenge
+          </span>
+        </div>
 
-      {/* 3. What you'll need */}
-      <div className="w-full bg-white p-6 sm:p-7 rounded-2xl border border-brand-border shadow-xs mb-5">
-        <h2 className="text-xs uppercase font-bold tracking-widest text-brand-dark mb-4">
-          WHAT YOU’LL NEED
-        </h2>
-        <div className="flex flex-wrap gap-2">
-          {career.whatYouNeed.map((skill, idx) => (
-            <span
-              key={idx}
-              className="px-3.5 py-1.5 rounded-xl bg-brand-bg border border-brand-border text-xs font-semibold text-brand-dark"
-            >
-              {skill}
-            </span>
+        <p className="text-sm text-brand-dark leading-relaxed font-medium mb-3">
+          Don’t guess from a personality test. Experience what solving a real {career.title} problem actually feels like.
+        </p>
+
+        <div className="space-y-2.5 mb-5">
+          {career.youMayEnjoyIf.map((item, idx) => (
+            <div key={idx} className="flex items-start gap-2.5 text-xs text-brand-muted">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 mt-0.5 shrink-0 stroke-[2.5]" />
+              <span>{item}</span>
+            </div>
           ))}
         </div>
+
+        <Link
+          href={`/careers/${career.id}/path`}
+          className="w-full py-3 px-4 rounded-xl bg-brand-primary text-white font-semibold text-sm shadow-sm hover:bg-brand-primary-hover transition-all flex items-center justify-center gap-2 transform hover:-translate-y-0.5"
+        >
+          <PlayCircle className="w-4 h-4" />
+          <span>Try 5-Minute Micro-Experience</span>
+        </Link>
       </div>
 
-      {/* 4. Ways to get there */}
-      <div className="w-full bg-white p-6 sm:p-7 rounded-2xl border border-brand-border shadow-xs mb-8">
-        <h2 className="text-xs uppercase font-bold tracking-widest text-brand-dark mb-5">
-          WAYS TO GET THERE
-        </h2>
+      {/* ─────────────────────────────────────────────────────────────
+          QUESTION 3: HOW CAN I BECOME THIS? (Learning Progression)
+          ───────────────────────────────────────────────────────────── */}
+      <div className="w-full bg-white p-6 sm:p-7 rounded-2xl border border-brand-border shadow-xs mb-5">
+        <div className="flex items-center gap-2 mb-4">
+          <GraduationCap className="w-4 h-4 text-brand-primary" />
+          <h2 className="text-xs uppercase font-bold tracking-widest text-brand-dark">
+            3. HOW CAN I BECOME THIS?
+          </h2>
+        </div>
+
         <div className="space-y-4">
-          {career.waysToGetThere.map((step, idx) => (
+          {progressionSteps.map((step, idx) => (
             <div key={idx} className="flex items-start gap-3.5">
               <div className="w-6 h-6 rounded-full bg-brand-primary-light text-brand-primary text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">
                 {idx + 1}
               </div>
               <div className="flex-1">
-                <h3 className="font-heading font-semibold text-sm text-brand-dark">
-                  {step.stage}
+                <h3 className="font-heading font-semibold text-xs text-brand-dark uppercase tracking-wider">
+                  {step.title}
                 </h3>
-                <p className="text-xs text-brand-muted mt-0.5">
-                  {step.description}
+                <p className="text-xs text-brand-muted mt-0.5 leading-relaxed">
+                  {step.desc}
                 </p>
               </div>
             </div>
@@ -162,13 +201,54 @@ export default function CareerDetailsPage({ params }: CareerDetailsPageProps) {
         </div>
       </div>
 
-      {/* Primary Action Button */}
+      {/* ─────────────────────────────────────────────────────────────
+          QUESTION 4: CAN I MAKE MONEY DOING THIS? (Where money comes from)
+          ───────────────────────────────────────────────────────────── */}
+      <div className="w-full bg-white p-6 sm:p-7 rounded-2xl border border-brand-border shadow-xs mb-8">
+        <div className="flex items-center gap-2 mb-2">
+          <DollarSign className="w-4 h-4 text-emerald-600" />
+          <h2 className="text-xs uppercase font-bold tracking-widest text-brand-dark">
+            4. WHERE DOES THE MONEY COME FROM?
+          </h2>
+        </div>
+        <p className="text-xs text-brand-muted mb-4">
+          No fake salary promises. Here are the realistic commercial channels for this craft:
+        </p>
+
+        <div className="space-y-3">
+          {(career.incomePaths || [
+            {
+              type: 'job',
+              title: 'Full-Time Employment',
+              emoji: '🎯',
+              description: 'Company payroll for building and supporting product value.',
+              whereMoneyComesFrom: 'Direct revenue generated by the business.',
+            },
+          ]).map((inc, idx) => (
+            <div key={idx} className="p-3.5 rounded-xl bg-brand-bg/60 border border-brand-border/80">
+              <div className="flex items-center gap-2 text-xs font-bold text-brand-dark">
+                <span>{inc.emoji}</span>
+                <span>{inc.title}</span>
+              </div>
+              <p className="text-xs text-brand-muted mt-1 leading-relaxed">
+                {inc.description}
+              </p>
+              <div className="mt-2 pt-2 border-t border-brand-border/40 text-[11px] text-brand-dark/80 font-medium flex items-center gap-1.5">
+                <span className="text-brand-primary font-bold">Revenue Source:</span>
+                <span>{inc.whereMoneyComesFrom}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Primary Sticky Action Button */}
       <div className="w-full space-y-3 sticky bottom-4 z-30">
         <Link
           href={`/careers/${career.id}/path`}
           className="w-full py-4 px-6 rounded-xl bg-brand-primary text-white font-semibold text-base sm:text-lg shadow-lg hover:bg-brand-primary-hover transition-all flex items-center justify-center gap-3 transform hover:-translate-y-0.5"
         >
-          <span>Explore This Path</span>
+          <span>Explore This Path & Next Steps</span>
           <ArrowRight className="w-5 h-5 stroke-[2.5]" />
         </Link>
       </div>
@@ -177,7 +257,7 @@ export default function CareerDetailsPage({ params }: CareerDetailsPageProps) {
       {relatedCareers.length > 0 && (
         <div className="w-full mt-12 pt-8 border-t border-brand-border/60">
           <h2 className="text-xs uppercase font-bold tracking-widest text-brand-subtle mb-4">
-            RELATED PATHS
+            COMPLEMENTARY PATHS
           </h2>
           <div className="space-y-2.5">
             {relatedCareers.map((rel) => (
