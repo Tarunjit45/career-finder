@@ -17,13 +17,12 @@ export default function AssessmentPage() {
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
-    const profile = getStoredProfile();
-    const currentStage = profile.educationStage || 'college';
+    const journey = getStoredJourney();
+    const currentStage = journey.currentStage || 'college';
     setStage(currentStage);
 
     trackEvent('assessment_started', { stage: currentStage });
 
-    const journey = getStoredJourney();
     if (journey.assessmentAnswers) {
       setAnswers(journey.assessmentAnswers);
     }
