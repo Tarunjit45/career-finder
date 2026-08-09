@@ -6,26 +6,27 @@
 
 ## 📌 Overview
 
-A high-performance TypeScript application engineered for scalability and quality.
+A high-performance application engineered by Tarunjit Biswas for quality and scalability.
 
 ## ✨ Key Features & Architecture
 
-- **High-Performance Architecture:** Engineered using modern `TypeScript` best practices.
-- **Modular & Scalable Design:** Structured code organization for easy maintenance and deployment.
-- **Modern UI/UX:** Clean, responsive glassmorphic interfaces designed for high user engagement.
-- **Real-Time Data Persistence:** Database integration with row-level security and high reliability.
+- **High-Performance Codebase:** Built using `TypeScript` and modern engineering principles.
+- **Modular & Scalable Design:** Structured directory tree for seamless development and deployment.
+- **Modern Responsive Styling:** Custom UI design system engineered for mobile & desktop clarity.
+- **Cloud Database Persistence:** Real-time data sync with secure authentication and API layer.
 
-## 🛠️ Tech Stack & Technologies
+## 🛠️ Tech Stack & Dependencies
 
-- **Primary Language:** `TypeScript`
-- **Frameworks & Libraries:** React 18, Next.js, TypeScript, Supabase, Tailwind CSS
-- **Deployment Target:** Vercel Edge / Cloud Infrastructure
+- **Core Language:** `TypeScript`
+- **Libraries & Tools:** React 18, Next.js, Tailwind CSS, Supabase, TypeScript
+- **Deployment Infrastructure:** Vercel Edge / Cloud Services
 
-## 📁 Project Directory Structure
+## 📁 Architecture & File Layout
 
 ```text
 career-finder/
 ├── .gitignore
+├── README.md
 ├── next.config.ts
 ├── package-lock.json
 ├── package.json
@@ -39,17 +40,16 @@ career-finder/
 ├── src/app/assessment/complete/page.tsx
 ├── src/app/assessment/page.tsx
 ├── src/app/auth
-├── src/app/auth/sign-in
-└── ... [additional source files]
+└── ... [additional codebase files]
 ```
 
-## 🚀 Getting Started
+## 🚀 Quickstart & Installation
 
 ### Prerequisites
 - Node.js (v18.0.0 or higher)
-- npm or yarn
+- npm or yarn package manager
 
-### Installation & Local Setup
+### Setup Instructions
 
 1. **Clone the repository:**
    ```bash
@@ -62,12 +62,12 @@ career-finder/
    npm install
    ```
 
-3. **Start development server:**
+3. **Launch development server:**
    ```bash
    npm run dev
    ```
 
-## 📜 License & Author
+## 📜 Author & License
 
-Engineered with ❤️ by **[Tarunjit Biswas](https://github.com/Tarunjit45)**.  
-Released under the **MIT License**.
+Architected & Developed by **[Tarunjit Biswas](https://github.com/Tarunjit45)**.  
+Distributed under the **MIT License**.
